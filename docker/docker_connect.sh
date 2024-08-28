@@ -53,7 +53,7 @@ if [[ -z "${CONTAINER}" ]]; then
         sudo mkdir -p "${AWS_DIR}"
     fi
 
-    docker_compose up -d --force-recreate
+    docker compose up -d --force-recreate
 
     CONTAINER="$(container_id)"
 

@@ -154,7 +154,7 @@ https://repo.anaconda.com/pkgs/main/linux-64/mkl_fft-1.0.6-py27h7dd41cf_0.tar.bz
 https://repo.anaconda.com/pkgs/main/linux-64/mkl_random-1.0.1-py27h4414c95_1.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/numpy-1.15.4-py27h1d66e8a_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/pandas-0.23.4-py27h04863e7_0.tar.bz2
-https://conda.anaconda.org/pytorch/linux-64/pytorch-1.1.0-py2.7_cuda10.0.130_cudnn7.5.1_0.tar.bz2
+https://conda.anaconda.org/pytorch/linux-64/pytorch-1.10.1-py3.8_cuda11.1_cudnn8.0.5_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/scipy-1.1.0-py27hfa4b5c9_1.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/patsy-0.5.1-py27_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/scikit-learn-0.19.2-py27h4989274_0.tar.bz2

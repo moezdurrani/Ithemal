@@ -1,33 +1,41 @@
 FROM debian:stretch
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
-        build-essential             \
-        cmake                       \
-        coreutils                   \
-        curl                        \
-        git                         \
-        gnupg                       \
-        libsqlite3-dev              \
-        locales                     \
-        man                         \
-        nasm                        \
-        pv                          \
-        python-dev                  \
-        qt5-default                 \
-        sqlite3                     \
-        sudo                        \
-        tmux                        \
-        unzip                       \
-        vim                         \
-        wget                        \
-        zip
+# Update the sources.list to point to the archived repositories and remove stretch-updates
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list && \
+    rm -f /etc/apt/sources.list.d/*stretch-updates* && \
+    apt-get update -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+    build-essential \
+    cmake \
+    coreutils \
+    curl \
+    git \
+    gnupg \
+    libsqlite3-dev \
+    locales \
+    man \
+    nasm \
+    pv \
+    python-dev \
+    qt5-default \
+    sqlite3 \
+    sudo \
+    tmux \
+    unzip \
+    vim \
+    wget \
+    zip
+
 
 # install mysql
 RUN wget -O /tmp/RPM-GPG-KEY-mysql https://repo.mysql.com/RPM-GPG-KEY-mysql && \
-        apt-key add /tmp/RPM-GPG-KEY-mysql && \
-        /bin/echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" > /etc/apt/sources.list.d/mysql.list && \
-        apt-get update && \
-        DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+    apt-key add /tmp/RPM-GPG-KEY-mysql && \
+    /bin/echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" > /etc/apt/sources.list.d/mysql.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-unauthenticated mysql-server
+
 
 COPY docker_my.cnf /etc/my.cnf
 
