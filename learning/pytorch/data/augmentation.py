@@ -209,7 +209,7 @@ def main(): # type: () -> None
 
     if args.store_sql:
         with open(os.path.join(_DATA_DIR, 'table_{}.sql'.format(time_str())), 'w') as f:
-            print('\n'.join(sql_commands), file=f)
+            print >> f, '\n'.join(sql_commands)
 
     if args.execute_sql:
         execute_sql(sql_commands)

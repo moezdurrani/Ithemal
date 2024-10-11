@@ -13,8 +13,9 @@ import xml.etree.ElementTree as ET
 import itertools
 
 import sys
+import os
 sys.path.append('..')
-
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../common')))
 import common_libs.utilities as ut
 
 
@@ -37,8 +38,18 @@ class DataInstructionEmbedding(Data):
     def dump_dataset_params(self):
         return (self.token_to_hot_idx, self.hot_idx_to_token)
 
+  # def load_dataset_params(self, params):
+      # (self.token_to_hot_idx, self.hot_idx_to_token) = params
+        
     def load_dataset_params(self, params):
-        (self.token_to_hot_idx, self.hot_idx_to_token) = params
+    	if not params:
+		# Handle the case where params is empty or None
+		self.token_to_hot_idx = {}
+		self.hot_idx_to_token = []
+    	else:
+		# Unpack the parameters as expected
+		(self.token_to_hot_idx, self.hot_idx_to_token) = params
+
 
     def prepare_data(self, progress=True, fixed=False):
         def hot_idxify(elem):

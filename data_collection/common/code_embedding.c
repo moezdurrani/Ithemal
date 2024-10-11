@@ -131,7 +131,9 @@ bool raw_token(void * drcontext, code_info_t * cinfo, instrlist_t * bb){
   int pos = 0;
   int i = 0;
 
-  uint16_t * cpos = cinfo->code;
+  //uint16_t * cpos = cinfo->code;
+  uint16_t *cpos = (uint16_t *)cinfo->code;
+
 
   uint32_t mem = 0;
 

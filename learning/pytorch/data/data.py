@@ -1,6 +1,9 @@
 #main data file
 
 import numpy as np
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../common')))
 import common_libs.utilities as ut
 import random
 import torch.nn as nn

@@ -164,9 +164,33 @@ def dump_model_and_data(model, data, fname):
     ), fname)
 
 def load_model_and_data(fname):
-    # type: (str) -> (md.AbstractGraphMode, dt.DataCost)
+    # type: (str) -> (md.AbstractGraphModule, dt.DataCost)
     dump = torch.load(fname)
+
+    # Since dump is a dict, access its contents accordingly
+    # Extract the model state dictionary
+    if isinstance(dump, dict):
+        # Access the 'model' key if it exists in the dictionary
+        model_state_dict = dump['model']  # Accessing the model from the dict
+    else:
+        raise ValueError("The dump file does not contain a model dictionary.")
+    print(" Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii The model state dict type is :" + str(type(model_state_dict)))
+
+    # Initialize the model architecture with the same parameters used during training
+    # Replace these values with the actual parameters used
+    model = md.GraphNN(embedding_size=128, hidden_size=256, num_classes=1) 
+   
+    # Load the model state dictionary
+    model.load_state_dict(model_state_dict)
+
+    # Load the dataset parameters if available
     data = dt.DataInstructionEmbedding()
     data.read_meta_data()
-    data.load_dataset_params(dump.dataset_params)
-    return (dump.model, data)
+    if 'dataset_params' in dump:
+        data.load_dataset_params(dump['dataset_params'])
+    else:
+        data.load_dataset_params({})
+
+    return (model, data)
+
+

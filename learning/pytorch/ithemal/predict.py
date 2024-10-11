@@ -4,36 +4,59 @@ from __future__ import print_function
 
 import argparse
 import binascii
-import common_libs.utilities as ut
-import copy
+import copy 
 import data.data_cost as dt
 import itertools
 import ithemal_utils
 import multiprocessing
-import os
-import subprocess
 import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../common')))
+import common_libs.utilities as ut
+import subprocess
 import threading
 import torch
 import warnings
+print(sys.path)
 
 START_MARKER = 'bb6f000000646790'.decode('hex')
 END_MARKER = 'bbde000000646790'.decode('hex')
 
-_TOKENIZER = os.path.join(os.environ['ITHEMAL_HOME'], 'data_collection', 'build', 'bin', 'tokenizer')
-
+#_TOKENIZER = os.path.join(os.environ['ITHEMAL_HOME'], 'data_collection', 'build', 'bin', 'tokenizer')
+_TOKENIZER = '/home/ithemal/ithemal/data_collection/tokenizer/tokenizer'
+    
 def load_model_and_data(model_file, model_data_file):
     with warnings.catch_warnings():
         warnings.simplefilter('ignore', torch.serialization.SourceChangeWarning)
-        (model, data) = ithemal_utils.load_model_and_data(model_file)
+        # Load the model architecture
+        model, data = ithemal_utils.load_model_and_data(model_file)
 
+    # Load the model data (weights)
     state_dict = torch.load(model_data_file)
+    print(model_file)
+    print("\n Yesss   Loaded model data type: " + str(type(state_dict)))
+    print("Available attributes/methods in PredictorDump: ", dir(state_dict))
+
+    # Check if the state_dict contains the 'model' key
+    #if 'model' in state_dict:
+        #model_from_dump = state_dict['model']
+    #else:
+    #    raise KeyError("'model' key not found in state_dict. Available keys: {}".format(state_dict.keys()))
+    
+    model_from_dump = state_dict.model
+
+    # Update model's state_dict with the loaded state_dict
     model_dict = model.state_dict()
-    new_model_dict = {k: v for (k, v) in state_dict['model'].items() if k in model_dict}
+    new_model_dict = {k: v for k, v in model_from_dump.items() if k in model_dict}
     model_dict.update(new_model_dict)
     model.load_state_dict(model_dict)
 
-    return (model, data)
+    # Explicitly set the embedding size if the model requires it
+    if hasattr(model, 'embedding_size'):
+        model.embedding_size = 256  # Adjust this value if necessary
+
+    return model, data
+
 
 _fake_intel = '\n'*500
 
